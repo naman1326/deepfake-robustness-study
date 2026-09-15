@@ -107,7 +107,10 @@ python pipeline/analyze_results.py --results_csv ./inference_results.csv --outpu
 
 ## Paper
 
-The full writeup, including related work, methodology, and discussion, is in [`paper/deepfake_robustness_paper.tex`](./paper/deepfake_robustness_paper.tex) (IEEE conference format, compiles cleanly on Overleaf). The architecture diagram is also available as an editable [`architecture_diagram.drawio`](./paper/architecture_diagram.drawio) file.
+The full research paper (currently preprint / pending publication) can be viewed directly on Overleaf:
+- 📄 **[Read Manuscript on Overleaf](https://www.overleaf.com/read/ryxqhmcfqvhn#31fb50)**
+
+The full LaTeX source, including related work, methodology, and discussion, is provided in [`paper/deepfake_robustness_paper.tex`](./paper/deepfake_robustness_paper.tex) (IEEE conference format, compiles cleanly on Overleaf). The architecture diagram is also available as an editable [`architecture_diagram.drawio`](./paper/architecture_diagram.drawio) file.
 
 ## Authors
 
