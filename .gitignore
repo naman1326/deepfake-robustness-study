@@ -1,0 +1,72 @@
+# ==============================================================================
+# Git Ignore Configuration - Deepfake Robustness Study
+# ==============================================================================
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Virtual Environments
+venv/
+env/
+.venv/
+ENV/
+
+# Large media files (RAW / DEGRADED VIDEO DATASETS)
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.flv
+*.wmv
+
+# Model checkpoints & large binary weights
+*.pkl
+*.pth
+*.pt
+*.onnx
+*.h5
+*.bin
+*.weights
+*.ckpt
+
+# Extracted frames, local datasets, and temporary processing directories
+frames/
+degraded/
+degraded_dryrun/
+subset/
+videos/
+output/
+pretrained_model/
+
+# Stale / Machine-specific local absolute path lists
+data_list/Deepfakes_c0_test.txt
+data_list/my_train.txt
+data_list/my_val.txt
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
