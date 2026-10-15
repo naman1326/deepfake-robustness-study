@@ -116,7 +116,7 @@ The full LaTeX source, including related work, methodology, and discussion, is p
 
 - Ghodake Naman Nitin (24BCE5051)
 - Ekansh Dhanotiya (24BCE5127)
-- Aditya Gautam (24BCE5308)
+- Aditya Gautam (24BCE5316)
 
 SCOPE, Vellore Institute of Technology, Chennai
 
