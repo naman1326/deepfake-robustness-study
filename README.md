@@ -1,17 +1,17 @@
-# Evaluating the Robustness of Real-Time Deepfake Detection Under Video-Conferencing Degradation
+# CallGuard-X: Robustness of a Fine-Tuned Xception Deepfake Detector Under Video-Conferencing Degradation
 
 An empirical study of how a fine-tuned Xception-based deepfake detector's performance degrades under realistic video-call conditions: bitrate compression, resolution downscaling, Gaussian blur, and simulated packet loss. Built on a balanced 1,000-video subset of FaceForensics++ (C23).
 
-**Headline finding:** compression and packet loss barely affect detection accuracy, but Gaussian blur collapses the detector's discriminative power to near-random (AUC 0.99 at baseline down to 0.59 under moderate blur), a much larger effect than resolution downscaling. See [`paper/`](./paper) for the full writeup.
+**Headline finding:** compression and packet loss barely affect detection accuracy, but Gaussian blur collapses the detector's discriminative power to near-random (AUC 0.99 at baseline down to 0.59 under moderate blur), a much larger effect than resolution downscaling.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
     A["FaceForensics++ (C23)<br/>Balanced subset: 200 x 5 classes<br/>(1,000 videos)"] --> B["Per-frame face detection (dlib)<br/>+ bounding-box crop (1.3x margin)"]
-    B --> C["Fine-tuning on clean frames<br/>Xception backbone, 5 epochs<br/>batch=8, Adam (lr=1e-3)<br/>Best val. acc: 91.46%"]
+    B --> C["Fine-tuning on clean frames<br/>Xception backbone, 5 epochs<br/>batch=8, Adam (lr=1e-3)<br/>final weights exported (best.pkl)"]
     B --> D["Degradation matrix (FFmpeg)<br/>Bitrate, Resolution,<br/>Gaussian blur, Simulated<br/>packet loss (12 conditions)"]
-    C --> E["Fine-tuned Xception detector<br/>(best.pkl checkpoint)"]
+    C --> E["CallGuard-X detector<br/>(best.pkl checkpoint)"]
     D --> E
     E --> F["Per-video inference<br/>mean fake-probability over<br/>up to 10 sampled frames"]
     F --> G["Per-condition evaluation<br/>AUC, EER, Accuracy@0.5"]
@@ -39,15 +39,14 @@ Full results across all 12 conditions are in [`results/condition_metrics_summary
 ## Repository Structure
 
 ```
- model/          # Xception architecture, training, and inference (based on HongguLiu/Deepfake-Detection)
- pipeline/        # Dataset sampling, degradation matrix, evaluation, and plotting scripts
- results/         # Metrics CSVs and manifests (no video data)
- figures/         # All plots and diagrams used in the paper
- paper/           # LaTeX source and editable architecture diagram
+├── model/          # Xception architecture, training, and inference
+├── pipeline/       # Dataset sampling, degradation matrix, evaluation, analysis, and plotting scripts
+├── results/        # Metrics CSVs and manifests (no video data)
+└── figures/        # All plots and diagrams used in the paper
 ```
 
 ### `model/`
-Forked and modified from [HongguLiu/Deepfake-Detection](https://github.com/HongguLiu/Deepfake-Detection), which implements the FaceForensics++ Xception baseline.
+Forked and modified from [HongguLiu/Deepfake-Detection](https://github.com/HongguLiu/Deepfake-Detection), which implements the FaceForensics++ Xception baseline, and integrated with our companion model repository [naman1326/deepfake-detection](https://github.com/naman1326/deepfake-detection).
 
 | File | Purpose |
 |---|---|
@@ -63,11 +62,16 @@ Forked and modified from [HongguLiu/Deepfake-Detection](https://github.com/Hongg
 
 | File | Purpose |
 |---|---|
-| `select_subset.py` | Samples a balanced subset from a local FaceForensics++ download |
+| `select_subset.py` | Samples a balanced subset (1,000 clips) from a local FaceForensics++ download |
 | `degrade.py` | Applies the bitrate/resolution/blur/packet-loss degradation matrix via FFmpeg |
 | `analyze_results.py` | Computes AUC, EER, and accuracy per condition from inference results |
-| `generate_paper_plots.py` | Regenerates every summary plot and the architecture diagram from the verified numbers below |
-| `plot_blur_packetloss.py` | Standalone plot for the blur/packet-loss conditions |
+| `heldout_analysis.py` | Held-out evaluation (150 clips), per-method degradation breakdown, and threshold diagnostics |
+| `generate_all_figures.py` | Regenerates every summary plot, comparison charts, and publication figure from verified numbers |
+| `generate_paper_plots.py` | Generates degradation curves and metric comparison plots |
+| `plot_blur_packetloss.py` | Standalone plot for blur and packet-loss conditions |
+| `model_complexity.py` | Parameter count and forward-pass inference latency profiling |
+| `verify_checkpoint.py` | Validates model checkpoint SHA-256 hashes to verify training epoch weights |
+| `make_drawio.py` | Generates editable Draw.io architecture and methodology diagrams (`.drawio`) |
 
 ## Setup
 
@@ -110,7 +114,11 @@ python pipeline/analyze_results.py --results_csv ./inference_results.csv --outpu
 The full research paper (currently preprint / pending publication) can be viewed directly on Overleaf:
 - 📄 **[Read Manuscript on Overleaf](https://www.overleaf.com/read/ryxqhmcfqvhn#31fb50)**
 
-The full LaTeX source, including related work, methodology, and discussion, is provided in [`paper/deepfake_robustness_paper.tex`](./paper/deepfake_robustness_paper.tex) (IEEE conference format, compiles cleanly on Overleaf). The architecture diagram is also available as an editable [`architecture_diagram.drawio`](./paper/architecture_diagram.drawio) file.
+## References & Related Repositories
+
+- **[naman1326/deepfake-detection](https://github.com/naman1326/deepfake-detection)**: Companion repository containing the core Xception deepfake detection, frame extraction, and fine-tuning pipeline.
+- **[HongguLiu/Deepfake-Detection](https://github.com/HongguLiu/Deepfake-Detection)**: Original implementation of the FaceForensics++ Xception benchmark detector.
+- **[FaceForensics++](https://github.com/ondyari/FaceForensics)**: Large-scale dataset for forgery detection in human faces.
 
 ## Authors
 
